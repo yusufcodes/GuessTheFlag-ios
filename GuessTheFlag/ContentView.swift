@@ -31,36 +31,59 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [.blue, .black]), startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
+            RadialGradient(stops: [
+                .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
+                .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3),
+            ], center: .top, startRadius: 200, endRadius: 400)
+            .ignoresSafeArea()
             
-            VStack(spacing: 30) {
-                VStack(spacing: 10) {
-                    Text("Tap the correct flag for: ")
-                        .foregroundColor(.white)
-                        .font(.subheadline.weight(.heavy))
-                    Text((countries[correctAnswer]))
-                        .foregroundColor(.white)
-                        .font(.largeTitle.weight(.semibold))
-                }
+            VStack {
+                Spacer()
                 
-                VStack {
-                    ForEach(0..<3) { number in
-                        Button() {
-                            checkAnswer(userSelection: number)
-                        } label: {
-                            Image(countries[number])
-                                .renderingMode(.original)
+                Text("Guess the Flag")
+                    .font(.largeTitle.bold())
+                    .foregroundColor(.white)
+                
+                VStack(spacing: 15) {
+                    VStack(spacing: 10) {
+                        Text("Tap the correct flag for: ")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline.weight(.heavy))
+                        Text((countries[correctAnswer]))
+                            .font(.largeTitle.weight(.semibold))
+                    }
+                    
+                    VStack {
+                        ForEach(0..<3) { number in
+                            Button() {
+                                checkAnswer(userSelection: number)
+                            } label: {
+                                Image(countries[number])
+                                    .renderingMode(.original)
+                            }
+                            .alert(scoreTitle, isPresented: $showingAlert) {
+                                Button("Play Again", action: askQuestion)
+                            } message: {
+                                Text("Your score is \(score)")
+                            }
+                            .clipShape(Capsule())
+                            .shadow(radius: 5)
                         }
-                        .alert(scoreTitle, isPresented: $showingAlert) {
-                            Button("Play Again", action: askQuestion)
-                        } message: {
-                            Text("Your score is \(score)")
-                        }
-                        .clipShape(Capsule())
-                        .shadow(radius: 5)
                     }
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+                .background(.regularMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                
+                Spacer()
+                Spacer()
+                
+                Text("Score: \(score)")
+                    .foregroundColor(.white)
+                    .font(.title.bold())
+                
+                Spacer()
             }
         }
     }
