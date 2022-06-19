@@ -15,8 +15,13 @@ struct ContentView: View {
     @State private var correctAnswer = Int.random(in: 0...2)
     @State private var score = 0
     
-    func checkAnswer(userSelection: Int) -> Bool {
-        countries[userSelection] == countries[correctAnswer] ? true : false
+    func checkAnswer(userSelection: Int) {
+        showingAlert = true
+        let isAnswerCorrect = countries[userSelection] == countries[correctAnswer] ? true : false
+        scoreTitle = isAnswerCorrect ? "Correct!" : "Incorrect"
+        if (isAnswerCorrect) {
+            score += 1
+        }
     }
     
     func askQuestion() {
@@ -41,13 +46,8 @@ struct ContentView: View {
                 
                 VStack {
                     ForEach(0..<3) { number in
-                        Button {
-                            showingAlert = true
-                            let isAnswerCorrect = checkAnswer(userSelection: number)
-                            scoreTitle = isAnswerCorrect ? "Correct!" : "Incorrect"
-                            if (isAnswerCorrect) {
-                                score += 1
-                            }
+                        Button() {
+                            checkAnswer(userSelection: number)
                         } label: {
                             Image(countries[number])
                                 .renderingMode(.original)
